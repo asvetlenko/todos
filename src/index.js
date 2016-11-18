@@ -19,5 +19,5 @@ render(
 
 */
 
-import './lessons/lesson22';
+import './lessons/lesson23';
 
