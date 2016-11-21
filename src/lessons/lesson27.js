@@ -3,7 +3,7 @@
 import {createStore, combineReducers} from 'redux'
 import React, {Component} from 'react';
 import ReactDOM, { render} from 'react-dom'
-import { Provider } from 'react-redux'
+import { Provider, connect } from 'react-redux'
 
 import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
@@ -182,37 +182,25 @@ const getVisibleTodos = (todos, filter) => {
   };
 };
 
-class VisibleTodoList extends Component {
-  componentDidMount(){
-    const { store } = this.context;
-    this.unsibscrobe = store.subscribe(() => this.forceUpdate());
+const mapStateToProps = (state) => {
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
   }
-
-  componentWillUnmount(){
-    this.unsibscrobe();
-  }
-
-  render() {
-    const props = this.props;
-    const { store } = this.context;
-    const state = store.getState();
-    
-    return (
-      <TodoList
-        todos={
-          getVisibleTodos(state.todos, state.visibilityFilter)
-        }
-        onTodoClick={ id => store.dispatch({
-          type: 'TOGGLE_TODO',
-          id
-        })}
-      />
-    );
-  }
-}
-VisibleTodoList.contextTypes = {
-  store: React.PropTypes.object
 };
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onTodoClick: (id) => {
+      dispatch({
+        type: 'TOGGLE_TODO',
+        id
+      })
+    }
+  };
+};
+
+const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(TodoList);
+
 
 const TodoApp = () => (
   <div>
@@ -224,7 +212,7 @@ const TodoApp = () => (
 
 
 ReactDOM.render(
-  <Provider store={createStore(todoApp)} >
+  <Provider store={createStore(todoApp)}>
     <TodoApp />
   </Provider>,
   document.getElementById('root')
