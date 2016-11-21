@@ -1,6 +1,5 @@
 'use strict';
 
-/*
 import React from 'react'
 import { render } from 'react-dom'
 import { createStore } from 'redux'
@@ -17,7 +16,4 @@ render(
   document.getElementById('root')
 );
 
-*/
-
-import './lessons/lesson30';
-
+// import './lessons/lesson30';
