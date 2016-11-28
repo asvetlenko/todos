@@ -14,4 +14,4 @@ render(
   document.getElementById('root')
 );
 
-// import './lessons/lesson30';
+//import './lesson30';
