@@ -52,7 +52,7 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
   };
 };
 
-const todoApp = combineReducers({todos, visibilityFilter});
+const reducer = combineReducers({todos, visibilityFilter});
 
 let nextTodoId = 0;
 const addTodo = (text) => {
@@ -75,13 +75,9 @@ const toggleTodo = (id) => {
     type: 'TOGGLE_TODO',
     id
   };
-}
+};
 
-const Link = ({
-  active,
-  onClick,
-  children
-}) => {
+const Link = ({active, onClick, children}) => {
   if(active) {
     return (<span>{ children }</span>);
   }
@@ -89,8 +85,8 @@ const Link = ({
   return (<a href="#" onClick={e => {
           e.preventDefault();
            onClick();
-          }}
-  >{children}</a>);
+          }}>{children}</a>
+  );
 };
 
 const mapStateToLinkProps = (state, ownProps) => {
@@ -107,7 +103,7 @@ const mapDispatchToLinkProps = (dispatch, ownProps) => {
   };
 };
 const FilterLink = connect(
-  mapDispatchToLinkProps,
+  mapStateToLinkProps,
   mapDispatchToLinkProps
 )(Link);
 
@@ -125,32 +121,16 @@ const Footer = () => {
   );
 };
 
-const Todo = ({
-  onClick,
-  completed,
-  text
-}) => (
-  <li
-    onClick={onClick}
-    style={{
-      textDecoration: completed ? 'line-through' : 'none'
-    }}
-  >
+const Todo = ({onClick, completed, text}) => (
+  <li onClick={onClick} style={{textDecoration: completed ? 'line-through' : 'none'}}>
     {text}
   </li>
 );
 
-const TodoList = ({
-  todos,
-  onTodoClick
-}) => (
+const TodoList = ({todos, onTodoClick}) => (
   <ul>
     {todos.map(todo =>
-      <Todo
-        key={todo.id}
-        {...todo}
-        onClick={()=>onTodoClick(todo.id)}
-      />
+      <Todo key={todo.id} {...todo} onClick={()=>onTodoClick(todo.id)} />
     )}
   </ul>
 );
@@ -165,9 +145,7 @@ let AddTodo = ({dispatch}) => {
       <button onClick={() => {
         dispatch(addTodo(input.value));
         input.value = '';
-      }}>
-        Add Todo
-      </button>
+      }}>Add Todo</button>
     </div>
   );
 };
@@ -205,7 +183,7 @@ const VisibleTodoList = connect(
 )(TodoList);
 
 
-const TodoApp = () => (
+const App = () => (
   <div>
     <AddTodo />
     <VisibleTodoList/>
@@ -213,10 +191,9 @@ const TodoApp = () => (
   </div>
 );
 
-
-ReactDOM.render(
-  <Provider store={createStore(todoApp)}>
-    <TodoApp />
+render(
+  <Provider store={createStore(reducer)} >
+    <App />
   </Provider>,
   document.getElementById('root')
 );
